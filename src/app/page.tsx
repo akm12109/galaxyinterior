@@ -62,7 +62,8 @@ export default function HomePage() {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const fetchedReviews: Review[] = [];
       querySnapshot.forEach((doc) => {
-        fetchedReviews.push({ id: doc.id, ...doc.data() });
+        const data = doc.data() as Omit<Review, 'id'>;
+        fetchedReviews.push({ id: doc.id, ...data } as Review);
       });
       if (fetchedReviews.length > 0) {
         setReviews(fetchedReviews);
