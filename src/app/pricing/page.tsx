@@ -3,7 +3,7 @@
 import React from 'react';
 import TargetCursor from '@/components/TargetCursor';
 import { CheckCircle2, ChevronRight, Gem, ShieldCheck, Sparkles, Building2, PaintBucket, Hammer, Wrench } from 'lucide-react';
-import Link from 'next/link';
+
 
 const PRICING_DATA = [
   { service: "False Ceiling", basic: "₹75/sq.ft", standard: "₹120/sq.ft", premium: "₹160/sq.ft" },
@@ -111,6 +111,7 @@ export default function PricingPage() {
             {PACKAGES.map((pkg, index) => (
               <div 
                 key={index} 
+                data-cursor-tooltip={pkg.recommended ? "pricing-standard-pkg" : (pkg.name === "BASIC" ? "pricing-basic-pkg" : "pricing-premium-pkg")}
                 className={`relative rounded-3xl overflow-hidden cursor-target shadow-2xl transition-transform hover:-translate-y-2 ${pkg.color} ${pkg.recommended ? 'scale-105 md:scale-110 z-10' : ''}`}
               >
                 {pkg.recommended && (
@@ -210,10 +211,10 @@ export default function PricingPage() {
             Our experts will visit your site, understand your vision, and provide a detailed BOQ (Bill of Quantities) with zero hidden charges.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <button className="w-full sm:w-auto bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-2xl transition-transform hover:scale-105 cursor-target">
+            <button data-cursor-tooltip="pricing-site-visit" className="w-full sm:w-auto bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-2xl transition-transform hover:scale-105 cursor-target">
               Book Free Site Visit
             </button>
-            <button className="w-full sm:w-auto bg-transparent border-2 border-white/20 hover:border-white hover:bg-white/10 text-white px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase transition-all cursor-target">
+            <button data-cursor-tooltip="pricing-pdf" className="w-full sm:w-auto bg-transparent border-2 border-white/20 hover:border-white hover:bg-white/10 text-white px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase transition-all cursor-target">
               Download Pricing PDF
             </button>
           </div>

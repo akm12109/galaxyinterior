@@ -24,13 +24,12 @@ export function Footer() {
         <div>
           <h4 className="text-brand-yellow font-black uppercase tracking-widest text-sm mb-4 border-b border-dotted border-brand-yellow pb-2">Site Map</h4>
           <ul className="space-y-4 text-sm font-bold text-gray-300">
-            <li><Link href="#" className="hover:text-brand-yellow transition-colors">Company Profile</Link></li>
-            <li><Link href="#" className="hover:text-brand-yellow transition-colors">Services</Link></li>
-            <li><Link href="#" className="hover:text-brand-yellow transition-colors">Turnkey Packages</Link></li>
-            <li><Link href="#" className="hover:text-brand-yellow transition-colors">Key Features</Link></li>
-            <li><Link href="#" className="hover:text-brand-yellow transition-colors">Material Partners</Link></li>
-            <li><Link href="#" className="hover:text-brand-yellow transition-colors">Service Areas</Link></li>
-            <li><Link href="#" className="hover:text-brand-yellow transition-colors">Portfolio Highlights</Link></li>
+            <li><Link href="/" className="hover:text-brand-yellow transition-colors cursor-target" data-cursor-tooltip="nav-home">Home</Link></li>
+            <li><Link href="/about" className="hover:text-brand-yellow transition-colors cursor-target" data-cursor-tooltip="nav-about">Company Profile</Link></li>
+            <li><Link href="/services" className="hover:text-brand-yellow transition-colors cursor-target" data-cursor-tooltip="nav-services">Services</Link></li>
+            <li><Link href="/projects" className="hover:text-brand-yellow transition-colors cursor-target" data-cursor-tooltip="nav-projects">Projects & Portfolio</Link></li>
+            <li><Link href="/pricing" className="hover:text-brand-yellow transition-colors cursor-target" data-cursor-tooltip="nav-pricing">Pricing & Packages</Link></li>
+            <li><Link href="/contact" className="hover:text-brand-yellow transition-colors cursor-target" data-cursor-tooltip="nav-contact">Contact Us</Link></li>
           </ul>
         </div>
 

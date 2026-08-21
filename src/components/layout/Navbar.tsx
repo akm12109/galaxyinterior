@@ -72,12 +72,12 @@ export function Navbar() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center space-x-4 text-xs font-bold tracking-widest uppercase h-full">
-            <Link href="/" className={getLinkStyle('/')}>
+            <Link data-cursor-tooltip="nav-home" href="/" className={`${getLinkStyle('/')} cursor-target`}>
               HOME
             </Link>
             
             <div className="relative group h-full flex items-center">
-              <Link href="/services" className={getLinkStyle('/services')}>
+              <Link data-cursor-tooltip="nav-services" href="/services" className={`${getLinkStyle('/services')} cursor-target`}>
                 OUR SERVICES <ChevronDown size={14} className="ml-1 opacity-70 group-hover:rotate-180 transition-transform" />
               </Link>
               
@@ -95,14 +95,13 @@ export function Navbar() {
                     { title: "Turnkey Project", img: "/services/service_turnkey_1787300070398.jpg" },
                     { title: "Renovation Project", img: "/services/service_renovation_1787300085173.jpg" }
                   ].map((service, index) => (
-                    <Link href={`/services/${service.title.replace(/\s+/g, '-').toLowerCase()}`} key={index} className="block w-40 group/card relative z-10">
+                    <Link data-cursor-tooltip={`services-${service.title.replace(/\s+/g, '-').toLowerCase()}`} href={`/services/${service.title.replace(/\s+/g, '-').toLowerCase()}`} key={index} className="block w-40 group/card relative z-10 cursor-target">
                       <div className="bg-[#1c2c4d] rounded-xl overflow-hidden shadow-md h-full border border-gray-800 hover:border-brand-yellow/50 transition-colors flex flex-col">
                         <div className="h-28 w-full overflow-hidden relative bg-gray-900">
-                          <img src={service.img} alt={service.title} className="w-full h-full object-cover opacity-70 group-hover/card:scale-110 group-hover/card:opacity-100 transition-all duration-500" />
+                          <Image src={service.img} alt={service.title} fill className="object-cover opacity-80 group-hover/card:opacity-100 group-hover/card:scale-110 transition-all duration-500" />
                         </div>
-                        <div className="p-4 flex-grow flex items-center justify-between">
-                          <h4 className="font-bold text-[11px] leading-tight text-white group-hover/card:text-brand-yellow transition-colors pr-2">{service.title}</h4>
-                          <span className="text-gray-500 group-hover/card:text-brand-yellow transition-colors text-xs">↗</span>
+                        <div className="p-3 text-center flex-grow flex items-center justify-center">
+                          <span className="text-[10px] font-black text-white group-hover/card:text-brand-yellow transition-colors leading-tight">{service.title}</span>
                         </div>
                       </div>
                     </Link>
@@ -112,15 +111,27 @@ export function Navbar() {
               </div>
             </div>
 
-            <Link href="/gallery" className={getLinkStyle('/gallery')}>GALLERY</Link>
-            <Link href="/projects" className={getLinkStyle('/projects')}>PROJECTS</Link>
-            <Link href="/pricing" className={getLinkStyle('/pricing')}>PRICING</Link>
-            <Link href="/about" className={getLinkStyle('/about')}>ABOUT</Link>
+            <Link data-cursor-tooltip="nav-projects" href="/projects" className={`${getLinkStyle('/projects')} cursor-target`}>
+              PROJECTS
+            </Link>
+            <Link data-cursor-tooltip="nav-gallery" href="/gallery" className={`${getLinkStyle('/gallery')} cursor-target`}>
+              GALLERY
+            </Link>
+            <Link data-cursor-tooltip="nav-pricing" href="/pricing" className={`${getLinkStyle('/pricing')} cursor-target`}>
+              PRICING
+            </Link>
+            <Link data-cursor-tooltip="nav-about" href="/about" className={`${getLinkStyle('/about')} cursor-target`}>
+              ABOUT US
+            </Link>
+            
+            <Link data-cursor-tooltip="nav-contact" href="/contact" className="ml-4 bg-brand-yellow text-brand-navy hover:bg-yellow-400 px-6 py-2.5 rounded-full border-none transition-colors h-max flex items-center shadow-lg shadow-black/20 cursor-target">
+              CONTACT
+            </Link>
           </nav>
 
           {/* CTA */}
           <div className="hidden md:block">
-            <Link href="/dashboard" className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase flex items-center transition-all shadow-[0_0_15px_rgba(241,184,33,0.4)]">
+            <Link data-cursor-tooltip="nav-dashboard" href="/dashboard" className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase flex items-center transition-all shadow-[0_0_15px_rgba(241,184,33,0.4)] cursor-target">
               <LayoutGrid size={14} className="mr-2" />
               DASHBOARD
             </Link>

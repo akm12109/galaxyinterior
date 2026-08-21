@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useCallback, useMemo, useState } from 'react';
 import { gsap } from 'gsap';
 import './TargetCursor.css';
+import tooltipsData from '../data/cursorTooltips.json';
 
 // A position: fixed element is positioned relative to the viewport UNLESS an
 // ancestor establishes a containing block (transform, perspective, filter,
@@ -43,6 +44,7 @@ const TargetCursor = ({
   cursorColor = '#f1b821', // Changed default to brand yellow
   cursorColorOnTarget = '#f1b821'
 }) => {
+  const [hoverText, setHoverText] = useState(null);
   const cursorRef = useRef(null);
   const cornersRef = useRef(null);
   const spinTl = useRef(null);
@@ -220,6 +222,14 @@ const TargetCursor = ({
       }
 
       activeTarget = target;
+
+      const tooltipId = target.getAttribute('data-cursor-tooltip');
+      if (tooltipId && tooltipsData[tooltipId]) {
+        setHoverText(tooltipsData[tooltipId]);
+      } else {
+        setHoverText(null);
+      }
+
       const corners = Array.from(cornersRef.current);
       corners.forEach(corner => gsap.killTweensOf(corner, 'x,y'));
 
@@ -280,6 +290,7 @@ const TargetCursor = ({
         targetCornerPositionsRef.current = null;
         gsap.set(activeStrengthRef, { current: 0, overwrite: true });
         activeTarget = null;
+        setHoverText(null);
 
         if (cursorColorOnTarget && cornersRef.current) {
           gsap.to(Array.from(cornersRef.current), {
@@ -412,6 +423,11 @@ const TargetCursor = ({
       <div className="target-cursor-corner corner-tr" style={{ borderColor: cursorColor }} />
       <div className="target-cursor-corner corner-br" style={{ borderColor: cursorColor }} />
       <div className="target-cursor-corner corner-bl" style={{ borderColor: cursorColor }} />
+      {hoverText && (
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-brand-navy/90 text-white text-xs font-bold px-3 py-1.5 rounded whitespace-nowrap shadow-xl backdrop-blur-sm pointer-events-none border border-white/10 z-50">
+          {hoverText}
+        </div>
+      )}
     </div>
   );
 };

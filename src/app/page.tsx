@@ -156,10 +156,10 @@ export default function HomePage() {
           </div>
           
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 mt-10">
-            <button className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-10 py-4 rounded-full text-lg font-black tracking-wide shadow-lg transition-colors cursor-target">
+            <button data-cursor-tooltip="home-pricing-btn" className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-10 py-4 rounded-full text-lg font-black tracking-wide shadow-lg transition-colors cursor-target">
               Pricing
             </button>
-            <button className="bg-transparent hover:bg-white/10 text-white border-2 border-white px-8 py-4 rounded-full text-lg font-bold tracking-wide transition-colors cursor-target">
+            <button data-cursor-tooltip="home-packages-btn" className="bg-transparent hover:bg-white/10 text-white border-2 border-white px-8 py-4 rounded-full text-lg font-bold tracking-wide transition-colors cursor-target">
               Explore Packages
             </button>
           </div>
@@ -225,6 +225,7 @@ export default function HomePage() {
               
               <button 
                 type="submit" 
+                data-cursor-tooltip="home-consultation-btn"
                 className="w-full bg-brand-yellow hover:bg-yellow-400 text-brand-navy font-black text-lg py-4 rounded-lg mt-4 transition-colors shadow-md cursor-target"
               >
                 Book Free Consultation
@@ -270,7 +271,7 @@ export default function HomePage() {
             { title: "Construction", desc: "Full-service construction execution with high-quality materials." },
             { title: "Modular Kitchen", desc: "Smart, highly efficient & elegant kitchen solutions for modern homes." }
           ].map((service, index) => (
-            <div key={index} className="bg-gray-50 p-10 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-brand-yellow/50 transition-all group cursor-pointer">
+            <div key={index} data-cursor-tooltip="home-expertise-btn" className="bg-gray-50 p-10 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-brand-yellow/50 transition-all group cursor-pointer cursor-target">
               <h3 className="text-brand-navy text-2xl font-black mb-4 group-hover:text-brand-yellow transition-colors">{service.title}</h3>
               <p className="text-gray-500 font-medium mb-8 leading-relaxed h-16">{service.desc}</p>
               <button className="text-brand-yellow text-sm font-bold tracking-widest uppercase flex items-center group-hover:underline underline-offset-4">
@@ -317,7 +318,7 @@ export default function HomePage() {
               <div className="p-6">
                 <div className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">{item.type}</div>
                 <h3 className="text-xl font-black text-brand-navy mb-6">{item.title}</h3>
-                <button className="w-full border-2 border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white font-bold text-xs tracking-widest uppercase py-3 rounded-lg transition-colors">
+                <button data-cursor-tooltip="home-furniture-btn" className="w-full border-2 border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white font-bold text-xs tracking-widest uppercase py-3 rounded-lg transition-colors cursor-target">
                   Enquire Now
                 </button>
               </div>
@@ -326,7 +327,7 @@ export default function HomePage() {
         </div>
         
         <div className="text-center">
-          <button className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-lg transition-colors">
+          <button data-cursor-tooltip="home-custom-furniture-btn" className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-lg transition-colors cursor-target">
             GET CUSTOM FURNITURE
           </button>
         </div>
