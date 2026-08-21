@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { 
   Wrench, 
@@ -10,14 +10,12 @@ import {
   RefreshCcw, 
   CheckCircle2, 
   ChevronDown, 
-  ArrowRight,
   Sparkles,
   HeartHandshake,
   Clock,
   ThumbsUp,
   Droplets
 } from 'lucide-react';
-import TargetCursor from '@/components/TargetCursor';
 
 // ==========================================
 // DATA STRUCTURES
@@ -190,20 +188,17 @@ export default function RenovationProjectPage() {
 
   return (
     <main className="bg-white">
-      <TargetCursor 
-        spinDuration={2}
-        hideDefaultCursor={true}
-        parallaxOn={true}
-        targetSelector="button, a, .cursor-target, select, input, .faq-item"
-      />
 
       {/* 1. HERO SECTION */}
       <section className="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
+          <Image 
             src="/services/service_renovation_1787300085173.jpg" 
             alt="Renovation Projects" 
-            className="w-full h-full object-cover animate-ken-burns"
+            fill
+            priority
+            className="object-cover animate-ken-burns"
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-brand-navy/70 mix-blend-multiply"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-transparent"></div>
@@ -253,7 +248,7 @@ export default function RenovationProjectPage() {
                 Renovating an old space is often more complex than building a new one from scratch. You have to work within existing structural constraints, deal with decades-old plumbing, and navigate delicate demolitions.
               </p>
               <p className="text-gray-400 text-lg leading-relaxed font-medium mb-10">
-                Our renovation experts love this challenge. Whether it's a 30-year-old ancestral home that needs modernizing or a newly bought resale apartment that needs your personal touch, we strip it to the bones and resurrect it into something spectacular.
+                Our renovation experts love this challenge. Whether it&apos;s a 30-year-old ancestral home that needs modernizing or a newly bought resale apartment that needs your personal touch, we strip it to the bones and resurrect it into something spectacular.
               </p>
               
               <div className="grid grid-cols-2 gap-8 border-t border-white/10 pt-10">
@@ -270,10 +265,12 @@ export default function RenovationProjectPage() {
             
             <div className="w-full lg:w-1/2 relative">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                <img 
+                <Image 
                   src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=1000" 
                   alt="Renovation Work" 
-                  className="w-full h-[600px] object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-brand-navy/20 mix-blend-multiply"></div>
               </div>
@@ -433,10 +430,12 @@ export default function RenovationProjectPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {GALLERY_IMAGES.map((img, index) => (
               <div key={index} className={`relative overflow-hidden rounded-xl group cursor-target ${index === 0 ? 'md:col-span-2 md:row-span-2 h-[600px]' : 'h-[290px]'}`}>
-                <img 
+                <Image 
                   src={img} 
                   alt={`Renovation image ${index + 1}`} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
                 <div className="absolute inset-0 bg-brand-navy/0 group-hover:bg-brand-navy/40 transition-colors duration-300 flex items-center justify-center">
                   <div className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
@@ -497,7 +496,7 @@ export default function RenovationProjectPage() {
         <div className="relative max-w-4xl mx-auto px-6 text-center z-10">
           <h4 className="text-brand-navy text-sm font-bold tracking-[0.3em] uppercase mb-6">READY FOR A CHANGE?</h4>
           <h2 className="text-5xl md:text-7xl font-black text-brand-navy leading-none mb-12">
-            Let's rebuild it better.
+            Let&apos;s rebuild it better.
           </h2>
           
           <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">

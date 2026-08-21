@@ -1,8 +1,7 @@
 "use client";
 
 import React from 'react';
-import TargetCursor from '@/components/TargetCursor';
-import { CheckCircle2, ChevronRight, Gem, ShieldCheck, Sparkles, Building2, PaintBucket, Hammer, Wrench } from 'lucide-react';
+import { CheckCircle2, Gem, ShieldCheck, Sparkles, PaintBucket } from 'lucide-react';
 
 
 const PRICING_DATA = [
@@ -75,12 +74,6 @@ const PACKAGES = [
 export default function PricingPage() {
   return (
     <main className="bg-gray-50 min-h-screen pb-10">
-      <TargetCursor 
-        spinDuration={2}
-        hideDefaultCursor={true}
-        parallaxOn={true}
-        targetSelector="button, a, .cursor-target"
-      />
 
       {/* HEADER */}
       <section className="bg-brand-navy text-white pt-40 pb-32 relative overflow-hidden">

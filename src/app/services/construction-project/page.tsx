@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { 
   HardHat, 
   Hammer, 
-  Ruler, 
   Truck, 
   Building2, 
   CheckCircle2, 
   ChevronDown, 
-  ArrowRight,
   ShieldAlert,
   Clock,
   Briefcase,
@@ -18,7 +16,6 @@ import {
   Zap,
   Box
 } from 'lucide-react';
-import TargetCursor from '@/components/TargetCursor';
 
 // ==========================================
 // DATA STRUCTURES
@@ -195,20 +192,17 @@ export default function ConstructionProjectPage() {
 
   return (
     <main className="bg-white">
-      <TargetCursor 
-        spinDuration={2}
-        hideDefaultCursor={true}
-        parallaxOn={true}
-        targetSelector="button, a, .cursor-target, select, input, .faq-item"
-      />
 
       {/* 1. HERO SECTION */}
       <section className="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
+          <Image 
             src="/services/service_construction_1787300029220.jpg" 
             alt="Construction Projects" 
-            className="w-full h-full object-cover animate-ken-burns"
+            fill
+            priority
+            className="object-cover animate-ken-burns"
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-brand-navy/80 mix-blend-multiply"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-transparent"></div>
@@ -276,10 +270,12 @@ export default function ConstructionProjectPage() {
             
             <div className="w-full lg:w-1/2 relative">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                <img 
-                  src="https://images.unsplash.com/photo-1541888081297-c819dc788916?auto=format&fit=crop&q=80&w=1000" 
+                <Image 
+                  src="https://images.unsplash.com/photo-1541888086925-0c773228965c?auto=format&fit=crop&q=80&w=1000" 
                   alt="Construction Site" 
-                  className="w-full h-[600px] object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-brand-navy/20 mix-blend-multiply"></div>
               </div>
@@ -301,7 +297,7 @@ export default function ConstructionProjectPage() {
             <h4 className="text-brand-navy text-sm font-bold tracking-widest uppercase mb-4">Engineering Excellence</h4>
             <h2 className="text-4xl md:text-5xl font-black text-brand-navy mb-6">Why We Stand Out</h2>
             <p className="text-gray-600 text-lg font-medium">
-              We don't just stack bricks. We engineer structures that defy time, weather, and wear.
+              We don&apos;t just stack bricks. We engineer structures that defy time, weather, and wear.
             </p>
           </div>
 
@@ -439,10 +435,12 @@ export default function ConstructionProjectPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {GALLERY_IMAGES.map((img, index) => (
               <div key={index} className={`relative overflow-hidden rounded-xl group cursor-target ${index === 0 ? 'md:col-span-2 md:row-span-2 h-[600px]' : 'h-[290px]'}`}>
-                <img 
+                <Image 
                   src={img} 
                   alt={`Construction image ${index + 1}`} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
                 <div className="absolute inset-0 bg-brand-navy/0 group-hover:bg-brand-navy/40 transition-colors duration-300 flex items-center justify-center">
                   <div className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
@@ -503,7 +501,7 @@ export default function ConstructionProjectPage() {
         <div className="relative max-w-4xl mx-auto px-6 text-center z-10">
           <h4 className="text-brand-navy text-sm font-bold tracking-[0.3em] uppercase mb-6">READY TO BUILD?</h4>
           <h2 className="text-5xl md:text-7xl font-black text-brand-navy leading-none mb-12">
-            Let's lay the foundation of your dream.
+            Let&apos;s lay the foundation of your dream.
           </h2>
           
           <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">

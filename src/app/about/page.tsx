@@ -1,7 +1,4 @@
-"use client";
-
 import React from 'react';
-import TargetCursor from '@/components/TargetCursor';
 import { 
   Sparkles, 
   Target, 
@@ -11,8 +8,7 @@ import {
   Layout, 
   Palette, 
   Zap, 
-  TrendingUp, 
-  Users 
+  TrendingUp 
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -62,39 +58,10 @@ const TIMELINE = [
   }
 ];
 
-const TEAM = [
-  {
-    name: "Shivashish Ranjan",
-    role: "Founder & Chairman",
-    initials: "SR"
-  },
-  {
-    name: "Kumkum Ranjan",
-    role: "CEO",
-    initials: "KR"
-  },
-  {
-    name: "Ratan Kumar",
-    role: "General Manager (GM)",
-    initials: "RK"
-  },
-  {
-    name: "Anjula Devi",
-    role: "Managing Director (MD)",
-    initials: "AD"
-  }
-];
 
 export default function AboutPage() {
   return (
     <main className="bg-brand-navy min-h-screen text-white pt-40 pb-10">
-      <TargetCursor 
-        spinDuration={2}
-        hideDefaultCursor={true}
-        parallaxOn={true}
-        targetSelector="button, a, .cursor-target"
-      />
-
       {/* 1. HERO / COMPANY OVERVIEW */}
       <section className="relative px-6 mb-32 max-w-[1400px] mx-auto text-center z-10">
         <div className="inline-flex items-center px-6 py-2 border border-brand-yellow/30 rounded-full mb-6 backdrop-blur-sm bg-brand-navy/50">
@@ -108,7 +75,7 @@ export default function AboutPage() {
           Galaxy Interior is a full-service interior design and construction company committed to delivering luxury, functionality, and innovation in every project. We specialize in transforming residential and commercial spaces into modern, elegant, and highly efficient environments using advanced design tools, smart planning techniques, and high-quality materials.
         </p>
         <p className="text-gray-400 text-lg font-medium max-w-4xl mx-auto leading-relaxed mb-12">
-          Our approach is based on detail-oriented planning, transparent execution, and client-focused customization, ensuring every project reflects the client's vision while maintaining global design standards. We work in Jharkhand, Bihar, and Bengal, offering complete solutions from concept design to final handover.
+          Our approach is based on detail-oriented planning, transparent execution, and client-focused customization, ensuring every project reflects the client&apos;s vision while maintaining global design standards. We work in Jharkhand, Bihar, and Bengal, offering complete solutions from concept design to final handover.
         </p>
         <a href="https://galaxyinteriorindia.com/contact" target="_blank" rel="noreferrer" className="inline-block bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-[0_0_20px_rgba(241,184,33,0.3)] transition-all hover:scale-105 cursor-target">
           Start Your Project
@@ -312,7 +279,7 @@ export default function AboutPage() {
       <section className="py-24 bg-brand-yellow text-center">
         <div className="max-w-3xl mx-auto px-6">
           <h2 className="text-4xl md:text-5xl font-black text-brand-navy mb-6">
-            Let's build something incredible.
+            Let&apos;s build something incredible.
           </h2>
           <button className="bg-brand-navy hover:bg-[#162442] text-white px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-2xl transition-transform hover:scale-105 cursor-target mt-6">
             Get in Touch

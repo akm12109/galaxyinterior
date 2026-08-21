@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 
 const SERVICES = [
@@ -59,10 +60,12 @@ export default function ServicesPage() {
             >
               {/* Image Side */}
               <div className="w-full lg:w-1/2 relative overflow-hidden rounded-3xl shadow-2xl h-[400px] lg:h-auto">
-                <img 
+                <Image 
                   src={service.img} 
                   alt={service.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-1000"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-brand-navy/10 group-hover:bg-transparent transition-colors duration-500"></div>
               </div>

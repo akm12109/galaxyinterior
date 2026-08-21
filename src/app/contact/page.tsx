@@ -1,15 +1,17 @@
 "use client";
 
 import React, { useState } from 'react';
-import TargetCursor from '@/components/TargetCursor';
-import { Mail, Phone, MapPin, Send, ArrowRight } from 'lucide-react';
+import { Mail, Phone, Send, ArrowRight, AlertCircle } from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
+    website: '' // Honeypot field
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,24 +26,49 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Honeypot check
+    if (formData.website !== '') {
+      console.log('Bot detected');
+      return;
+    }
+
+    // Client-side rate limiting (10 minutes)
+    const lastSubTime = localStorage.getItem('last_inquiry_time');
+    if (lastSubTime && Date.now() - parseInt(lastSubTime) < 10 * 60 * 1000) {
+      alert('You can only submit one inquiry every 10 minutes to prevent spam.');
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus(null);
     
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const { website, ...dataToSubmit } = formData;
+      await addDoc(collection(db, 'inquiries'), {
+        ...dataToSubmit,
+        type: 'contact',
+        createdAt: serverTimestamp()
+      });
+      
+      localStorage.setItem('last_inquiry_time', Date.now().toString());
+      
       setSubmitStatus('success');
-      setFormData({ name: '', email: '', phone: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', message: '', website: '' });
       
       setTimeout(() => {
         setSubmitStatus(null);
       }, 5000);
-    }, 1500);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <main className="min-h-screen bg-brand-navy pt-24 pb-20 relative overflow-hidden">
-      <TargetCursor targetSelector=".cursor-target" />
       
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand-yellow/5 rounded-full blur-[120px] pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
@@ -55,7 +82,7 @@ export default function ContactPage() {
             <span className="text-brand-yellow text-xs font-black tracking-[0.3em] uppercase">Get In Touch</span>
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
-            Let's build your <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow to-yellow-200">dream space</span>
+            Let&apos;s build your <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow to-yellow-200">dream space</span>
           </h1>
           <p className="text-gray-400 text-lg md:text-xl font-medium leading-relaxed">
             Have a project in mind? Our expert interior designers and constructors are ready to bring your vision to life.
@@ -138,14 +165,22 @@ export default function ContactPage() {
           <div className="lg:col-span-7">
             <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
               <h2 className="text-3xl font-black text-brand-navy mb-2">Send a Message</h2>
-              <p className="text-gray-500 mb-10 font-medium">Fill out the form below and we'll get back to you shortly.</p>
+              <p className="text-gray-500 mb-10 font-medium">Fill out the form below and we&apos;ll get back to you shortly.</p>
               
               {submitStatus === 'success' && (
                 <div className="mb-8 p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl flex items-center">
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
                     <Send className="w-4 h-4 text-green-600" />
                   </div>
-                  <p className="font-bold">Message sent successfully! We'll be in touch soon.</p>
+                  <p className="font-bold">Message sent successfully! We&apos;ll be in touch soon.</p>
+                </div>
+              )}
+              {submitStatus === 'error' && (
+                <div className="mb-8 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl flex items-center">
+                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                    <AlertCircle className="w-4 h-4 text-red-600" />
+                  </div>
+                  <p className="font-bold">Failed to send message. Please try again later.</p>
                 </div>
               )}
 
@@ -177,6 +212,18 @@ export default function ContactPage() {
                       className="w-full bg-gray-50 border border-gray-200 text-brand-navy px-5 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-yellow focus:border-transparent transition-all font-medium placeholder:text-gray-300"
                     />
                   </div>
+                </div>
+
+                {/* Honeypot field - hidden from real users */}
+                <div style={{ display: 'none' }} aria-hidden="true">
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={formData.website}
+                    onChange={handleChange}
+                  />
                 </div>
 
                 <div className="space-y-2">

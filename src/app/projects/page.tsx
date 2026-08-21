@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import TargetCursor from '@/components/TargetCursor';
-import { db } from '../../../firebase';
+import Image from 'next/image';
+import { db } from '@/lib/firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { MapPin, ArrowRight, CheckCircle2, Clock, CalendarDays } from 'lucide-react';
 import Link from 'next/link';
@@ -91,10 +91,12 @@ const MOCK_PROJECTS: Project[] = [
 const ProjectCard = ({ project }: { project: Project }) => (
   <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 group cursor-target flex flex-col h-full hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
     <div className="relative h-64 overflow-hidden">
-      <img 
+      <Image 
         src={project.image} 
         alt={project.title} 
-        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+        fill
+        className="object-cover group-hover:scale-110 transition-transform duration-700"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
       <div className="absolute inset-0 bg-brand-navy/20 group-hover:bg-transparent transition-colors duration-300"></div>
       
@@ -151,7 +153,7 @@ export default function ProjectsPage() {
           }
         }
       } catch (error) {
-        console.error("Error loading projects from Firebase:", error);
+        console.error("Error fetching projects from Firebase:", error);
       } finally {
         setLoading(false);
       }
@@ -166,12 +168,6 @@ export default function ProjectsPage() {
 
   return (
     <main className="bg-gray-50 min-h-screen pb-10">
-      <TargetCursor 
-        spinDuration={2}
-        hideDefaultCursor={true}
-        parallaxOn={true}
-        targetSelector="button, a, .cursor-target"
-      />
 
       {/* HEADER */}
       <section className="bg-brand-navy text-white pt-40 pb-32 rounded-b-[3rem] relative overflow-hidden">
@@ -193,25 +189,45 @@ export default function ProjectsPage() {
       <div className="max-w-[1400px] mx-auto px-6 -mt-16 relative z-20 space-y-24 mb-24">
         
         {/* ONGOING PROJECTS */}
-        {ongoing.length > 0 && (
-          <section>
-            <div className="flex items-center mb-8">
-              <div className="w-12 h-12 bg-brand-yellow rounded-xl flex items-center justify-center mr-4 shadow-lg shadow-brand-yellow/20">
-                <Clock className="text-brand-navy" size={24} />
-              </div>
-              <div>
-                <h2 className="text-3xl font-black text-brand-navy">Ongoing Projects</h2>
-                <p className="text-gray-500 font-medium">Currently under construction and development.</p>
-              </div>
+        <section>
+          <div className="flex items-center mb-8">
+            <div className="w-12 h-12 bg-brand-yellow rounded-xl flex items-center justify-center mr-4 shadow-lg shadow-brand-yellow/20">
+              <Clock className="text-brand-navy" size={24} />
             </div>
+            <div>
+              <h2 className="text-3xl font-black text-brand-navy">Ongoing Projects</h2>
+              <p className="text-gray-500 font-medium">Currently under construction and development.</p>
+            </div>
+          </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {ongoing.map(project => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {loading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={`skeleton-${i}`} className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 flex flex-col h-full animate-pulse">
+                  <div className="h-64 bg-gray-200"></div>
+                  <div className="p-8 flex flex-col flex-grow">
+                    <div className="h-8 bg-gray-200 rounded-md w-3/4 mb-4"></div>
+                    <div className="flex items-center mb-6">
+                      <div className="h-4 bg-gray-200 rounded-md w-1/4"></div>
+                      <span className="mx-2 opacity-30">|</span>
+                      <div className="h-4 bg-gray-200 rounded-md w-1/4"></div>
+                    </div>
+                    <div className="space-y-2 mb-8 flex-grow">
+                      <div className="h-4 bg-gray-200 rounded-md w-full"></div>
+                      <div className="h-4 bg-gray-200 rounded-md w-full"></div>
+                      <div className="h-4 bg-gray-200 rounded-md w-4/5"></div>
+                    </div>
+                    <div className="h-4 bg-gray-200 rounded-md w-1/2 mt-auto"></div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              ongoing.map(project => (
                 <ProjectCard key={project.id} project={project} />
-              ))}
-            </div>
-          </section>
-        )}
+              ))
+            )}
+          </div>
+        </section>
 
         {/* UPCOMING PROJECTS */}
         {upcoming.length > 0 && (
@@ -264,7 +280,7 @@ export default function ProjectsPage() {
           <div className="relative z-10">
             <h2 className="text-4xl md:text-5xl font-black text-white mb-6">Want to be our next success story?</h2>
             <p className="text-gray-300 text-lg font-medium mb-10 max-w-2xl mx-auto">
-              Whether it's a commercial high-rise or your dream home, we have the expertise to build it better.
+              Whether it&apos;s a commercial high-rise or your dream home, we have the expertise to build it better.
             </p>
             <Link href="/contact" className="inline-block bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-2xl transition-transform hover:scale-105">
               Discuss Your Project

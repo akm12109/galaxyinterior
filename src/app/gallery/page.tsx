@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import CircularGallery from '@/components/CircularGallery';
-import TargetCursor from '@/components/TargetCursor';
-import { db } from '../../../firebase';
+import { db } from '@/lib/firebase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { ChevronDown, ImageIcon, Sparkles } from 'lucide-react';
-import Image from 'next/image';
 
 const DEFAULT_GALLERY_IMAGES = [
   { image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200", text: "Luxury Living" },
@@ -64,12 +63,6 @@ export default function GalleryPage() {
 
   return (
     <main className="bg-brand-navy min-h-screen text-white pt-40 pb-10">
-      <TargetCursor 
-        spinDuration={2}
-        hideDefaultCursor={true}
-        parallaxOn={true}
-        targetSelector="button, a, .cursor-target, .gallery-item"
-      />
 
       {/* HEADER */}
       <div className="max-w-[1400px] mx-auto px-6 mb-16 text-center">
@@ -125,11 +118,13 @@ export default function GalleryPage() {
             <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
               {restImages.map((img, index) => (
                 <div key={index} className="relative overflow-hidden rounded-2xl group gallery-item break-inside-avoid">
-                  <img 
+                  <Image 
                     src={img.image} 
                     alt={img.text} 
+                    width={1200}
+                    height={800}
                     className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-700"
-                    loading="lazy"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-8">
                     <h3 className="text-white font-black text-2xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
@@ -150,7 +145,7 @@ export default function GalleryPage() {
             Inspired by what you see?
           </h2>
           <p className="text-brand-navy/80 text-lg font-medium mb-10">
-            Let's start drafting the blueprint for your dream space today.
+            Let&apos;s start drafting the blueprint for your dream space today.
           </p>
           <button className="bg-brand-navy hover:bg-[#162442] text-white px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-2xl transition-transform hover:scale-105 cursor-target">
             Book a Consultation
