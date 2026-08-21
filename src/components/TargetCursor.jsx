@@ -41,7 +41,7 @@ const TargetCursor = ({
   hoverDuration = 0.2,
   parallaxOn = true,
   cursorColor = '#f1b821', // Changed default to brand yellow
-  cursorColorOnTarget
+  cursorColorOnTarget = '#f1b821'
 }) => {
   const cursorRef = useRef(null);
   const cornersRef = useRef(null);

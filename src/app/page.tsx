@@ -6,6 +6,7 @@ import { Logo } from '@/components/ui/Logo';
 import { db } from '../../firebase';
 import { collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from 'firebase/firestore';
 import TargetCursor from '@/components/TargetCursor';
+import type { Review } from '../types/review';
 
 const SLIDER_IMAGES = [
   "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=2000",
@@ -40,7 +41,7 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   // Reviews state
-  const [reviews, setReviews] = useState([{
+  const [reviews, setReviews] = useState<Review[]>([{
     id: "mock1",
     name: "Rahul Singhania",
     location: "Ranchi",
@@ -59,7 +60,7 @@ export default function HomePage() {
   useEffect(() => {
     const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const fetchedReviews = [];
+      const fetchedReviews: Review[] = [];
       querySnapshot.forEach((doc) => {
         fetchedReviews.push({ id: doc.id, ...doc.data() });
       });
