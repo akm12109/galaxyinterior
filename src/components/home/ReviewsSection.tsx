@@ -34,8 +34,10 @@ export default function ReviewsSection() {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const fetchedReviews: Review[] = [];
       querySnapshot.forEach((doc) => {
-        const data = doc.data() as Omit<Review, 'id'>;
-        fetchedReviews.push({ id: doc.id, ...data } as Review);
+        const data = doc.data() as Omit<Review, 'id'> & { status?: string };
+        if (data.status === 'approved') {
+          fetchedReviews.push({ id: doc.id, ...data } as Review);
+        }
       });
       if (fetchedReviews.length > 0) {
         setReviews(fetchedReviews);
@@ -50,11 +52,15 @@ export default function ReviewsSection() {
     setIsSubmitting(true);
     try {
       await addDoc(collection(db, 'reviews'), {
-        name: reviewName,
+        customerName: reviewName,
+        name: reviewName, // keep name for backward compatibility during transition
         location: reviewLocation,
         review: reviewText,
         rating: reviewRating,
+        status: 'pending',
+        isFeatured: false,
         createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       });
       setReviewName('');
       setReviewLocation('');

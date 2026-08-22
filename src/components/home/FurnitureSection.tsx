@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 const FURNITURE_ITEMS = [
   { title: 'Luxury Velvet Sofa', type: 'Luxury', img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=600' },
@@ -63,24 +64,26 @@ export default function FurnitureSection() {
               <div className="p-6">
                 <div className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">{item.type}</div>
                 <h3 className="text-xl font-black text-brand-navy mb-6">{item.title}</h3>
-                <button
+                <Link
+                  href="/contact"
                   data-cursor-tooltip="home-furniture-btn"
-                  className="w-full border-2 border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white font-bold text-xs tracking-widest uppercase py-3 rounded-lg transition-colors cursor-target"
+                  className="w-full flex justify-center border-2 border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white font-bold text-xs tracking-widest uppercase py-3 rounded-lg transition-colors cursor-target"
                 >
                   Enquire Now
-                </button>
+                </Link>
               </div>
             </div>
           ))}
         </div>
 
         <div className="text-center">
-          <button
+          <Link
+            href="/contact"
             data-cursor-tooltip="home-custom-furniture-btn"
-            className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-lg transition-colors cursor-target"
+            className="inline-block bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-lg transition-colors cursor-target"
           >
             GET CUSTOM FURNITURE
-          </button>
+          </Link>
         </div>
       </div>
     </section>

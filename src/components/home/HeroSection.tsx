@@ -2,13 +2,37 @@
 
 import { useState, useEffect } from 'react';
 import { ChevronDown, AlertCircle, CheckCircle2 } from 'lucide-react';
+import Link from 'next/link';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, getDocs, query, orderBy } from 'firebase/firestore';
 
-const SLIDER_IMAGES = [
-  'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=2000',
-  'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=2000',
-  'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=2000',
+interface SlideData {
+  id: string;
+  imageUrl: string;
+  mobileImageUrl?: string;
+  title: string;
+  subtitle: string;
+  ctaText: string;
+  ctaUrl: string;
+}
+
+const DEFAULT_SLIDES: SlideData[] = [
+  {
+    id: 'default-1',
+    imageUrl: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=2000',
+    title: 'Construct Your Dream Home',
+    subtitle: 'Turning ideas into concrete reality with itemised BOQ and zero hidden costs.',
+    ctaText: 'Explore Packages',
+    ctaUrl: '/services'
+  },
+  {
+    id: 'default-2',
+    imageUrl: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=2000',
+    title: 'Luxury Interiors',
+    subtitle: 'Crafting premium spaces tailored to your unique lifestyle.',
+    ctaText: 'Explore Packages',
+    ctaUrl: '/services'
+  }
 ];
 
 export default function HeroSection() {
@@ -50,35 +74,68 @@ export default function HeroSection() {
     }
   };
 
+  const [slides, setSlides] = useState<SlideData[]>([]);
+  const [loadingSlides, setLoadingSlides] = useState(true);
+
   useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const q = query(collection(db, 'heroSlides'), orderBy('sortOrder', 'asc'));
+        const snapshot = await getDocs(q);
+        const data = snapshot.docs
+          .map(doc => ({ id: doc.id, ...doc.data() } as SlideData & { isActive: boolean }))
+          .filter(slide => slide.isActive !== false);
+        
+        if (data.length > 0) {
+          setSlides(data);
+        } else {
+          setSlides(DEFAULT_SLIDES);
+        }
+      } catch (err) {
+        console.error("Error fetching slides:", err);
+        setSlides(DEFAULT_SLIDES);
+      } finally {
+        setLoadingSlides(false);
+      }
+    };
+    fetchSlides();
+  }, []);
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % SLIDER_IMAGES.length);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides]);
+
+  const activeSlide = slides[currentSlide] || DEFAULT_SLIDES[0];
 
   return (
     <div className="relative w-full min-h-[calc(100vh-8rem)] flex items-center mt-[-2rem]">
 
       {/* Background Slider */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        {SLIDER_IMAGES.map((src, index) => (
+      <div className="absolute inset-0 z-0 overflow-hidden bg-brand-navy">
+        {slides.map((slide, index) => (
           <div
-            key={src}
+            key={slide.id}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
               index === currentSlide ? 'opacity-100' : 'opacity-0'
             }`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={src}
-              alt={`Interior design showcase ${index + 1}`}
-              className="w-full h-full object-cover"
-            />
+            <picture>
+              {slide.mobileImageUrl && <source media="(max-width: 768px)" srcSet={slide.mobileImageUrl} />}
+              <img
+                src={slide.imageUrl}
+                alt={slide.title}
+                className="w-full h-full object-cover"
+              />
+            </picture>
           </div>
         ))}
         {/* Dark Overlay for text readability */}
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-black/50"></div>
       </div>
 
       {/* Main Content */}
@@ -87,9 +144,7 @@ export default function HeroSection() {
         {/* Left Side: Headlines and Stats */}
         <div className="w-full lg:w-3/5 flex flex-col items-start pt-10">
 
-          <h1 className="text-5xl md:text-[5.5rem] font-black text-brand-yellow leading-[1.1] tracking-tight mb-2 drop-shadow-lg">
-            Construct Your <br />
-            Dream Home
+          <h1 className="text-5xl md:text-[5.5rem] font-black text-brand-yellow leading-[1.1] tracking-tight mb-2 drop-shadow-lg" dangerouslySetInnerHTML={{ __html: activeSlide.title.replace(/\n/g, '<br />') }}>
           </h1>
 
           <div className="bg-brand-navy px-6 py-3 inline-block mt-4 rounded-sm shadow-xl">
@@ -100,17 +155,17 @@ export default function HeroSection() {
 
           <div className="bg-brand-navy/80 backdrop-blur-md px-6 py-5 mt-8 rounded-md border border-white/10 max-w-2xl shadow-xl">
             <p className="text-white text-lg font-medium leading-relaxed">
-              Turning ideas into <span className="font-black text-brand-yellow">concrete reality</span> with itemised BOQ and zero hidden costs.
+              {activeSlide.subtitle}
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 mt-10">
-            <button data-cursor-tooltip="home-pricing-btn" className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-10 py-4 rounded-full text-lg font-black tracking-wide shadow-lg transition-colors cursor-target">
+            <Link data-cursor-tooltip="home-pricing-btn" href="/pricing" className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-10 py-4 rounded-full text-lg font-black tracking-wide shadow-lg transition-colors cursor-target flex items-center justify-center">
               Pricing
-            </button>
-            <button data-cursor-tooltip="home-packages-btn" className="bg-transparent hover:bg-white/10 text-white border-2 border-white px-8 py-4 rounded-full text-lg font-bold tracking-wide transition-colors cursor-target">
-              Explore Packages
-            </button>
+            </Link>
+            <Link data-cursor-tooltip="home-packages-btn" href={activeSlide.ctaUrl || '/services'} className="bg-transparent hover:bg-white/10 text-white border-2 border-white px-8 py-4 rounded-full text-lg font-bold tracking-wide transition-colors cursor-target flex items-center justify-center">
+              {activeSlide.ctaText || 'Explore Packages'}
+            </Link>
           </div>
 
           <div className="bg-brand-navy/80 backdrop-blur-md px-8 py-6 mt-16 rounded-xl border border-white/10 flex flex-wrap gap-10 shadow-xl">
@@ -223,7 +278,7 @@ export default function HeroSection() {
             </form>
 
             <p className="text-[10px] text-gray-400 text-center mt-6 leading-tight">
-              By submitting, you agree to our <a href="#" className="text-brand-yellow hover:underline">privacy policy</a>, allowing us to use your information as outlined.
+              By submitting, you agree to our <Link href="/contact" className="text-brand-yellow hover:underline">privacy policy</Link>, allowing us to use your information as outlined.
             </p>
           </div>
         </div>

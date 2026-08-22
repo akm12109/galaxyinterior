@@ -1,4 +1,5 @@
 import { ChevronDown } from 'lucide-react';
+import Link from 'next/link';
 
 const EXPERTISE_ITEMS = [
   { title: 'Architectural Plan', desc: 'Modern architectural & structural blueprints for your dream home.' },
@@ -39,9 +40,9 @@ export default function ExpertiseSection() {
             >
               <h3 className="text-brand-navy text-2xl font-black mb-4 group-hover:text-brand-yellow transition-colors">{service.title}</h3>
               <p className="text-gray-500 font-medium mb-8 leading-relaxed h-16">{service.desc}</p>
-              <button className="text-brand-yellow text-sm font-bold tracking-widest uppercase flex items-center group-hover:underline underline-offset-4">
+              <Link href={`/services/${service.title.replace(/\s+/g, '-').toLowerCase()}`} className="text-brand-yellow text-sm font-bold tracking-widest uppercase flex items-center group-hover:underline underline-offset-4 w-fit">
                 EXPLORE <ChevronDown className="ml-2 -rotate-90 w-4 h-4" />
-              </button>
+              </Link>
             </div>
           ))}
         </div>

@@ -1,7 +1,27 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Logo } from '@/components/ui/Logo';
+import { db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 export function Footer() {
+  const [settings, setSettings] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const snap = await getDoc(doc(db, 'settings', 'general'));
+        if (snap.exists()) {
+          setSettings(snap.data());
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchSettings();
+  }, []);
   return (
     <footer className="bg-[#0b162c] text-gray-300 py-16 border-t-4 border-brand-yellow font-medium">
       <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -12,12 +32,10 @@ export function Footer() {
           <div className="mb-6 w-48">
             <Logo className="scale-75 origin-left" />
           </div>
-          <p className="text-sm leading-relaxed max-w-[250px]">
-            By Pass Road Rampur,<br />
-            Near Jha Thakur Fuel Pump,<br />
-            Deoghar, Jharkhand,<br />
-            India.
-          </p>
+          <div className="text-sm leading-relaxed max-w-[250px]">
+            <p className="font-bold text-white mb-1">Statewide Operations</p>
+            <p className="text-gray-400 text-xs leading-5">We work across Jharkhand, Bihar, and West Bengal.</p>
+          </div>
         </div>
 
         {/* Column 2: SITE MAP */}
@@ -63,13 +81,14 @@ export function Footer() {
           <div className="space-y-4 mb-8 text-sm font-bold text-white">
             <div className="flex items-center space-x-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand-yellow flex-shrink-0"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-              <a href="mailto:info@galaxyinteriorindia.com" className="hover:text-brand-yellow transition-colors break-all">info@galaxyinteriorindia.com</a>
+              <a href={`mailto:${settings?.email || 'info@galaxyinteriorindia.com'}`} className="hover:text-brand-yellow transition-colors break-all">
+                {settings?.email || 'info@galaxyinteriorindia.com'}
+              </a>
             </div>
             <div className="flex items-start space-x-3">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand-yellow fill-current flex-shrink-0 mt-1"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               <div className="flex flex-col space-y-1">
-                <a href="tel:+919631980881" className="hover:text-brand-yellow transition-colors">+91 96319 80881</a>
-                <a href="tel:+919122795726" className="hover:text-brand-yellow transition-colors text-xs text-gray-400">+91 91227 95726</a>
+                <a href={`tel:${settings?.phone || '+919631980881'}`} className="hover:text-brand-yellow transition-colors">{settings?.phone || '+91 96319 80881'}</a>
               </div>
             </div>
           </div>

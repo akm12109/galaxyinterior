@@ -3,13 +3,15 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Phone, LayoutGrid, ChevronDown, Menu, X } from 'lucide-react';
+import { Phone, LayoutGrid, ChevronDown, Menu, X, User } from 'lucide-react';
 import Image from 'next/image';
 import { Logo } from '@/components/ui/Logo';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   const getLinkStyle = (path: string) => {
     // Basic match or starts with for services
@@ -117,9 +119,38 @@ export function Navbar() {
             <Link data-cursor-tooltip="nav-gallery" href="/gallery" className={`${getLinkStyle('/gallery')} cursor-target`}>
               GALLERY
             </Link>
-            <Link data-cursor-tooltip="nav-pricing" href="/pricing" className={`${getLinkStyle('/pricing')} cursor-target`}>
-              PRICING
-            </Link>
+            <div className="relative group h-full flex items-center">
+              <Link data-cursor-tooltip="nav-pricing" href="/pricing" className={`${getLinkStyle('/pricing')} cursor-target`}>
+                PRICING <ChevronDown size={14} className="ml-1 opacity-70 group-hover:rotate-180 transition-transform" />
+              </Link>
+              
+              {/* Mega Menu Dropdown */}
+              <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-max opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 pt-2">
+                <div className="bg-white p-4 rounded-2xl shadow-2xl border border-gray-100 flex gap-4 relative overflow-hidden">
+                  
+                  {/* Subtle decorative background element */}
+                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-yellow/10 rounded-full blur-3xl"></div>
+                  
+                  {[
+                    { title: "Turnkey Project Package", link: "/pricing/packages", img: "/services/service_turnkey_1787300070398.jpg" },
+                    { title: "Cost Calculator", link: "/pricing/calculator", img: "/services/service_design_1787300013035.jpg" },
+                    { title: "Supervision Packages", link: "/pricing/supervision", img: "/services/service_construction_1787300029220.jpg" }
+                  ].map((service, index) => (
+                    <Link data-cursor-tooltip={`pricing-${service.title.replace(/\s+/g, '-').toLowerCase()}`} href={service.link} key={index} className="block w-40 group/card relative z-10 cursor-target">
+                      <div className="bg-[#1c2c4d] rounded-xl overflow-hidden shadow-md h-full border border-gray-800 hover:border-brand-yellow/50 transition-colors flex flex-col">
+                        <div className="h-28 w-full overflow-hidden relative bg-gray-900">
+                          <Image src={service.img} alt={service.title} fill className="object-cover opacity-80 group-hover/card:opacity-100 group-hover/card:scale-110 transition-all duration-500" />
+                        </div>
+                        <div className="p-3 text-center flex-grow flex items-center justify-center">
+                          <span className="text-[10px] font-black text-white group-hover/card:text-brand-yellow transition-colors leading-tight">{service.title}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                  
+                </div>
+              </div>
+            </div>
             <Link data-cursor-tooltip="nav-about" href="/about" className={`${getLinkStyle('/about')} cursor-target`}>
               ABOUT US
             </Link>
@@ -131,10 +162,17 @@ export function Navbar() {
 
           {/* CTA */}
           <div className="hidden md:block">
-            <Link data-cursor-tooltip="nav-dashboard" href="/dashboard" className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase flex items-center transition-all shadow-[0_0_15px_rgba(241,184,33,0.4)] cursor-target">
-              <LayoutGrid size={14} className="mr-2" />
-              DASHBOARD
-            </Link>
+            {user ? (
+              <Link data-cursor-tooltip="nav-dashboard" href="/dashboard" className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase flex items-center transition-all shadow-[0_0_15px_rgba(241,184,33,0.4)] cursor-target">
+                <LayoutGrid size={14} className="mr-2" />
+                DASHBOARD
+              </Link>
+            ) : (
+              <Link data-cursor-tooltip="nav-login" href="/login" className="bg-brand-yellow hover:bg-yellow-400 text-brand-navy px-6 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase flex items-center transition-all shadow-[0_0_15px_rgba(241,184,33,0.4)] cursor-target">
+                <User size={14} className="mr-2" />
+                LOGIN
+              </Link>
+            )}
           </div>
           
           {/* Mobile Menu Button */}
@@ -179,7 +217,23 @@ export function Navbar() {
 
             <Link href="/gallery" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center ${pathname === '/gallery' ? 'text-brand-yellow' : 'text-white'}`}>GALLERY</Link>
             <Link href="/projects" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center ${pathname === '/projects' ? 'text-brand-yellow' : 'text-white'}`}>PROJECTS</Link>
-            <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center ${pathname === '/pricing' ? 'text-brand-yellow' : 'text-white'}`}>PRICING</Link>
+            <div className="flex flex-col space-y-4 border-l-2 border-brand-yellow/30 pl-4 mt-4">
+              <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className={`text-xs ${pathname === '/pricing' ? 'text-brand-yellow' : 'text-gray-400'}`}>PRICING OVERVIEW</Link>
+              {[
+                { title: "Turnkey Project Package", link: "packages" },
+                { title: "Cost Calculator", link: "calculator" },
+                { title: "Supervision Packages", link: "supervision" }
+              ].map((service, index) => (
+                <Link 
+                  key={index} 
+                  href={`/pricing/${service.link}`} 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`flex items-center text-xs ${pathname.includes(service.link) ? 'text-brand-yellow' : 'text-white'}`}
+                >
+                  {service.title}
+                </Link>
+              ))}
+            </div>
             <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center ${pathname === '/about' ? 'text-brand-yellow' : 'text-white'}`}>ABOUT</Link>
             
             <a href="tel:+919631980881" className="bg-brand-yellow text-brand-navy px-4 py-3 rounded-xl flex items-center justify-center mt-4">

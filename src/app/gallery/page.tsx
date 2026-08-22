@@ -38,10 +38,13 @@ export default function GalleryPage() {
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-          const loadedImages = querySnapshot.docs.map(doc => ({
-            image: doc.data().url || doc.data().image,
-            text: doc.data().title || doc.data().text || 'Gallery Image'
-          }));
+          const loadedImages = querySnapshot.docs
+            .map(doc => doc.data())
+            .filter(data => data.isActive !== false) // Default to true if missing
+            .map(data => ({
+              image: data.imageUrl || data.url || data.image,
+              text: data.title || data.text || 'Gallery Image'
+            }));
           
           if (loadedImages.length > 0) {
             setImages(loadedImages);

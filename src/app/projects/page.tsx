@@ -17,76 +17,17 @@ type Project = {
   area: string;
 };
 
-const MOCK_PROJECTS: Project[] = [
-  // ONGOING
-  {
-    id: "p1",
-    title: "Galaxy Towers Resi-Comm",
-    description: "A mixed-use skyscraper featuring 120 luxury apartments and 3 floors of premium retail space in the heart of the city.",
-    image: "https://images.unsplash.com/photo-1541888081297-c819dc788916?auto=format&fit=crop&q=80&w=1200",
-    status: "ongoing",
-    location: "Kolkata, WB",
-    area: "150,000 sq.ft"
-  },
-  {
-    id: "p2",
-    title: "TechPark Phase II",
-    description: "State-of-the-art commercial complex designed for modern IT companies with advanced smart-building management.",
-    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=1200",
-    status: "ongoing",
-    location: "Patna, BR",
-    area: "85,000 sq.ft"
-  },
-  
-  // UPCOMING
-  {
-    id: "p3",
-    title: "Heritage Boutique Hotel",
-    description: "Restoring an 80-year-old colonial bungalow and converting it into a luxury 40-key boutique hotel while retaining its charm.",
-    image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=1200",
-    status: "upcoming",
-    location: "Ranchi, JH",
-    area: "35,000 sq.ft"
-  },
-  {
-    id: "p4",
-    title: "Zen Garden Villas",
-    description: "A gated community of 25 ultra-luxury villas focused on biophilic design and sustainable architecture.",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200",
-    status: "upcoming",
-    location: "Deoghar, JH",
-    area: "120,000 sq.ft"
-  },
-
-  // COMPLETED
-  {
-    id: "p5",
-    title: "Aura Corporate HQ",
-    description: "Award-winning interior design and fit-out for a leading multinational corporation, completed 2 weeks ahead of schedule.",
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200",
-    status: "completed",
-    location: "Kolkata, WB",
-    area: "45,000 sq.ft"
-  },
-  {
-    id: "p6",
-    title: "The Minimalist Residence",
-    description: "A complete structural overhaul and interior styling for a private client, focusing on stark lines and natural light.",
-    image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200",
-    status: "completed",
-    location: "Bhagalpur, BR",
-    area: "4,500 sq.ft"
-  },
-  {
-    id: "p7",
-    title: "Marina Bay Condos",
-    description: "Turnkey execution of 12 luxury waterfront apartments, featuring imported Italian marble and smart home automation.",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200",
-    status: "completed",
-    location: "Kolkata, WB",
-    area: "32,000 sq.ft"
-  }
-];
+const fetchProjects = async () => {
+    try {
+      const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(q);
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+      return data.filter(p => p.isPublic === true);
+    } catch (error) {
+      console.error('Error fetching public projects:', error);
+      return [];
+    }
+  };
 
 const ProjectCard = ({ project }: { project: Project }) => (
   <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 group cursor-target flex flex-col h-full hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
@@ -128,29 +69,33 @@ const ProjectCard = ({ project }: { project: Project }) => (
 );
 
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>(MOCK_PROJECTS);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProjects = async () => {
+    const fetchPortfolio = async () => {
       try {
         const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-          const loadedProjects = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            title: doc.data().title || 'Untitled Project',
-            description: doc.data().description || '',
-            image: doc.data().image || "https://images.unsplash.com/photo-1541888081297-c819dc788916?auto=format&fit=crop&q=80&w=1200",
-            status: doc.data().status || 'ongoing',
-            location: doc.data().location || 'Unknown Location',
-            area: doc.data().area || ''
-          })) as Project[];
+          const loadedProjects = querySnapshot.docs
+            .map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            }))
+            .filter(p => p.isPublic === true)
+            .map(doc => ({
+              id: doc.id,
+              title: doc.projectName || doc.title || 'Untitled Project',
+              description: doc.description || doc.requirements || '',
+              image: doc.coverImageUrl || doc.image || "https://images.unsplash.com/photo-1541888081297-c819dc788916?auto=format&fit=crop&q=80&w=1200",
+              status: (doc.status || 'ongoing').toLowerCase(),
+              location: doc.location || 'Unknown Location',
+              area: doc.areaSqft ? `${doc.areaSqft} sqft` : (doc.area || '')
+            })) as Project[];
           
-          if (loadedProjects.length > 0) {
-            setProjects(loadedProjects);
-          }
+          setProjects(loadedProjects);
         }
       } catch (error) {
         console.error("Error fetching projects from Firebase:", error);
@@ -159,7 +104,7 @@ export default function ProjectsPage() {
       }
     };
 
-    fetchProjects();
+    fetchPortfolio();
   }, []);
 
   const ongoing = projects.filter(p => p.status === 'ongoing');

@@ -1,3 +1,6 @@
+import { ArrowRight, Phone } from 'lucide-react';
+import Link from 'next/link';
+
 export default function CTASection() {
   return (
     <section className="py-32 bg-brand-yellow relative overflow-hidden">
@@ -13,12 +16,12 @@ export default function CTASection() {
         </h2>
 
         <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
-          <button className="w-full sm:w-auto bg-brand-navy hover:bg-[#162442] text-white px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-2xl transition-transform hover:scale-105 cursor-target">
+          <Link href="/contact" className="w-full sm:w-auto bg-brand-navy hover:bg-[#162442] text-white px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase shadow-2xl transition-transform hover:scale-105 cursor-target flex items-center justify-center">
             ENQUIRE NOW
-          </button>
-          <button className="w-full sm:w-auto bg-transparent hover:bg-white/30 text-brand-navy border-2 border-brand-navy px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase transition-colors cursor-target">
+          </Link>
+          <Link href="/projects" className="w-full sm:w-auto bg-transparent hover:bg-white/30 text-brand-navy border-2 border-brand-navy px-12 py-5 rounded-full font-black text-sm tracking-widest uppercase transition-colors cursor-target flex items-center justify-center">
             VIEW PROJECTS
-          </button>
+          </Link>
         </div>
       </div>
     </section>

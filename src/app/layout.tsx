@@ -4,6 +4,7 @@ import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import TargetCursor from '@/components/TargetCursor';
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -86,12 +87,13 @@ export default function RootLayout({
           targetSelector="button, a, .cursor-target, select, input, .faq-item"
         />
 
-        <Navbar />
-        <main className="flex-grow pt-[104px]">
-          {children}
-        </main>
-
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          <main className="flex-grow pt-[104px]">
+            {children}
+          </main>
+          <Footer />
+        </AuthProvider>
 
         {/* Floating WhatsApp Button */}
         <a
